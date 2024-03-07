@@ -1,10 +1,11 @@
 import psycopg2
 import random
+import csv
 
-conn = psycopg2.connect(database = "customer", 
-                        user = "admin", 
+conn = psycopg2.connect(database = "postgres", 
+                        user = "postgres", 
                         host= '127.0.0.1',
-                        password = "admin",
+                        password = "postgres",
                         port = 5432)
 cur = conn.cursor()
 
@@ -26,7 +27,7 @@ max_ip_value = 255
 
 
 while(1):
-    print("\n\nMAIN MENU\n\n1)Update a tuple\n2)Delete a tuple\n3)Insert random tuples\n4)Show table\n5)Exit\n")
+    print("\n\nMAIN MENU\n\n1)Update a tuple\n2)Delete a tuple\n3)Insert random tuples from csv file\n4)Show table\n5)Exit\n")
     choice = int(input("Enter your choice : "))
     if choice==1:
         src,dest = input("Enter the src and dest port to identify the document\n").split(" ")
@@ -41,18 +42,24 @@ while(1):
         cur.execute(f"delete from flow_table where src_port = {src} and dest_port = {dest};")
         conn.commit()
     elif choice==3:
-        num = int(input("Enter the number of records you want to insert\n"))
-        for i in range(0,num):
-            src_ip_type = generate_random_ip_type()
-            dest_ip_type = generate_random_ip_type()
+        n = int(input("Enter the number of records you want to insert\n"))
+        cnt=0
+        rem = []
+        with open("data.csv",mode = "r") as file:
+            for line in file:
+                if(cnt<n):
+                    
+                    data = line.split(",")
+                    cur.execute(f"insert into flow_table(src_ip,dest_ip,src_port,dest_port,ip_type) values('{data[0]}','{data[1]}',{int(data[2])},{int(data[3])},'{data[4].strip()}');")
+                    
+                    conn.commit()
+                  
+                else:
+                    rem.append(line)
+                cnt+=1
 
-            src_ip = generate_random_ip(src_ip_type, min_ip_value, max_ip_value)
-            dest_ip = generate_random_ip(dest_ip_type, min_ip_value, max_ip_value)
-
-            src_port = generate_random_port()
-            dest_port = generate_random_port()
-            cur.execute(f"insert into flow_table(src_ip,dest_ip,src_port,dest_port,ip_type) values('{src_ip}','{dest_ip}',{src_port},{dest_port},'{src_ip_type}');")
-            conn.commit()
+        with open("data.csv",mode="w")as file:
+            file.writelines(rem)
     elif choice==4:
             cur.execute("select * from flow_table;")
             rows = cur.fetchall()
