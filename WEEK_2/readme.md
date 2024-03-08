@@ -1,7 +1,9 @@
 # Project Progress Report - Week 2 (Date: 08-03-2024)
+<p align = "center">
+<img src="flow_diagram.png" alt="Alt text" height="10%" width ="30%">
+</p>
 
-![Flow diagram](flow_diagram.png)
-
+# work - flow
 ## 1. Sniffing Packets:
 
 ### packet_sniffing.py script:
@@ -22,6 +24,8 @@
 - Reads the first n tuples from data.csv.
 - Inserts each tuple into the relevant database table using SQL INSERT commands.
 - Deletes the processed tuples from data.csv to manage file size.
+
+<br>
 
 ## My Work (Date: 16-02-2024)
 
