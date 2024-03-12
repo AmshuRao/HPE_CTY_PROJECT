@@ -17,7 +17,7 @@ min_ip_value = 1
 max_ip_value = 255
 mp = {}
 cnt=0
-while(cnt<500):
+while(cnt<50):
     ip_type=generate_random_ip_type()
     src_port = generate_random_port()
     dest_port = generate_random_port()
@@ -25,9 +25,11 @@ while(cnt<500):
     dest_ip = generate_random_ip(ip_type,min_ip_value,max_ip_value)
     res = src_ip+","+dest_ip+","+str(src_port)+","+str(dest_port)+","+ip_type+"\n"
     reverse_res = dest_ip+","+src_ip+","+str(dest_port)+","+str(src_port)+","+ip_type+"\n"
-    if res not in mp.keys():
+    if res not in mp.keys() and reverse_res not in mp.keys():
         #push res and reverse res into the csv file
-        with open("file_path\\file_name",mode="a")as file:
+        mp[res] = 1
+        mp[reverse_res] = 1
+        with open("data_100_tuples.csv",mode="a")as file:
             file.write(res)
             file.write(reverse_res)
         cnt+=1
