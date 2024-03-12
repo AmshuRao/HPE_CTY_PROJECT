@@ -1,6 +1,6 @@
 # Project Progress Report - Week 2 (Date: 08-03-2024)
 
-![Flow diagram](flow_diagram.png)
+
 
 ## 1. Sniffing Packets:
 
