@@ -59,104 +59,49 @@ while(1):
     print("\n\nMAIN MENU\n\n1)Delete random tuples from the database\n2)Insert random tuples from csv\n3)Update random tuples in database\n4)Exit\n")
     choice = int(input("Enter your choice : "))
     if choice==1:
-        time_for_deletion = []
-        time_before_deletion = datetime.now()
-        with open('data_100_delete.csv','r')as file:
-             for line in file:
-                  data = line.split(",")
-                  cur.execute(f"select * from flow_table where src_ip='{data[0]}', dest_ip = '{data[1]}',src_port = {int(data[2])},dest_port ={int(data[3])}, ip_type = '{data[4]}';")
-                  rows = cur.fetchall()
-                  if(len(rows)>0):
-                       cur.execute(f"delete from flow_table where src_ip='{data[0]}', dest_ip = '{data[1]}',src_port = {int(data[2])},dest_port ={int(data[3])}, ip_type = '{data[4]}';")
-        time_after_deletion  = datetime.now();
-        time_for_deletion.append(time_after_deletion-time_before_deletion)
+          time_for_deletion = []
 
-        time_before_deletion = datetime.now()
-        with open('data_1000_delete.csv','r')as file:
-             for line in file:
-                  data = line.split(",")
-                  cur.execute(f"select * from flow_table where src_ip='{data[0]}', dest_ip = '{data[1]}',src_port = {int(data[2])},dest_port ={int(data[3])}, ip_type = '{data[4]}';")
-                  rows = cur.fetchall()
-                  if(rows.length>0):
-                       cur.execute(f"delete from flow_table where src_ip='{data[0]}', dest_ip = '{data[1]}',src_port = {int(data[2])},dest_port ={int(data[3])}, ip_type = '{data[4]}';")
-        time_after_deletion  = datetime.now();
-        time_for_deletion.append(time_after_deletion-time_before_deletion)
+          # Perform bulk deletion for different file sizes
+          files_to_delete = ['data_100_delete.csv', 'data_1000_delete.csv', 'data_10000_delete.csv', 'data_100000_delete.csv']
 
-        time_before_deletion = datetime.now()
-        with open('data_10000_delete.csv','r')as file:
-             for line in file:
-                  data = line.split(",")
-                  cur.execute(f"select * from flow_table where src_ip='{data[0]}', dest_ip = '{data[1]}',src_port = {int(data[2])},dest_port ={int(data[3])}, ip_type = '{data[4]}';")
-                  rows = cur.fetchall()
-                  if(rows.length>0):
-                       cur.execute(f"delete from flow_table where src_ip='{data[0]}', dest_ip = '{data[1]}',src_port = {int(data[2])},dest_port ={int(data[3])}, ip_type = '{data[4]}';")
-        time_after_deletion  = datetime.now();
-        time_for_deletion.append(time_after_deletion-time_before_deletion)
+          for filename in files_to_delete:
+               time_before_deletion = datetime.now()
+               with open(filename, 'r') as file:
+                    for line in file:
+                         data = line.strip().split(",")
+                         cur.execute(f"DELETE FROM flow_table WHERE src_ip='{data[0]}' AND dest_ip='{data[1]}' AND src_port={int(data[2])} AND dest_port={int(data[3])} AND ip_type='{data[4]}'")
+               conn.commit()
+               time_after_deletion = datetime.now()
+               time_for_deletion.append(time_after_deletion - time_before_deletion)
+               # note : here to maintain the structure of the database we are reinserting the tuples back into the database
+               with open(filename, 'r') as file:
+                    cur.copy_expert(f"COPY flow_table FROM STDIN WITH CSV HEADER", file)
+                    conn.commit()
+               
 
-        time_before_deletion = datetime.now()
-        with open('data_100000_delete.csv','r')as file:
-             for line in file:
-                  data = line.split(",")
-                  cur.execute(f"select * from flow_table where src_ip='{data[0]}', dest_ip = '{data[1]}',src_port = {int(data[2])},dest_port ={int(data[3])}, ip_type = '{data[4]}';")
-                  rows = cur.fetchall()
-                  if(rows.length>0):
-                       cur.execute(f"delete from flow_table where src_ip='{data[0]}', dest_ip = '{data[1]}',src_port = {int(data[2])},dest_port ={int(data[3])}, ip_type = '{data[4]}';")
-        time_after_deletion  = datetime.now();
-        time_for_deletion.append(time_after_deletion-time_before_deletion)
-        
-        print_table(time_for_deletion)
-        print_graph(time_for_deletion)
+          # Print time taken for each deletion
+          print_table(time_for_deletion)
+          print_graph(time_for_deletion)
+
+
 
         
     elif choice==2:
-        time_for_insertions = []
-        time_before_insertion = datetime.now()
-        with open("data_100_tuples.csv")as file:
-            for line in file:
-                    data = line.split(",")
-                    cur.execute(f"insert into flow_table(src_ip,dest_ip,src_port,dest_port,ip_type) values('{data[0]}','{data[1]}',{int(data[2])},{int(data[3])},'{data[4].strip()}');")
+          time_for_insertions = []
+          files = ["data_100_tuples.csv", "data_1000_tuples.csv", "data_10000_tuples.csv", "data_100000_tuples.csv", "data_1000000_tuples.csv"]
+          for filename in files:
+               time_before_insertion = datetime.now()
+               with open(filename, 'r') as file:
+                    cur.copy_expert(f"COPY flow_table FROM STDIN WITH CSV HEADER", file)
                     conn.commit()
-        time_after_insertion = datetime.now()
-        time_for_insertions.append(time_after_insertion-time_before_insertion)
+                    if(filename!="data_1000000_tuples.csv"):
+                         cur.execute("delete from flow_table;")
+               time_after_insertion = datetime.now()
+               time_for_insertions.append(time_after_insertion - time_before_insertion)
 
-        time_before_insertion = datetime.now()
-        with open("data_1000_tuples.csv")as file:
-            for line in file:
-                    data = line.split(",")
-                    cur.execute(f"insert into flow_table(src_ip,dest_ip,src_port,dest_port,ip_type) values('{data[0]}','{data[1]}',{int(data[2])},{int(data[3])},'{data[4].strip()}');")
-                    conn.commit()
-        time_after_insertion = datetime.now()
-        time_for_insertions.append(time_after_insertion-time_before_insertion)
-
-        time_before_insertion = datetime.now()
-        with open("data_10000_tuples.csv")as file:
-            for line in file:
-                    data = line.split(",")
-                    cur.execute(f"insert into flow_table(src_ip,dest_ip,src_port,dest_port,ip_type) values('{data[0]}','{data[1]}',{int(data[2])},{int(data[3])},'{data[4].strip()}');")
-                    conn.commit()
-        time_after_insertion = datetime.now()
-        time_for_insertions.append(time_after_insertion-time_before_insertion)
-
-        time_before_insertion = datetime.now()
-        with open("data_100000_tuples.csv")as file:
-            for line in file:
-                    data = line.split(",")
-                    cur.execute(f"insert into flow_table(src_ip,dest_ip,src_port,dest_port,ip_type) values('{data[0]}','{data[1]}',{int(data[2])},{int(data[3])},'{data[4].strip()}');")
-                    conn.commit()
-        time_after_insertion = datetime.now()
-        time_for_insertions.append(time_after_insertion-time_before_insertion)
-
-        time_before_insertion = datetime.now()
-        with open("data_1000000_tuples.csv")as file:
-            for line in file:
-                    data = line.split(",")
-                    cur.execute(f"insert into flow_table(src_ip,dest_ip,src_port,dest_port,ip_type) values('{data[0]}','{data[1]}',{int(data[2])},{int(data[3])},'{data[4].strip()}');")
-                    conn.commit()
-        time_after_insertion = datetime.now()
-        time_for_insertions.append(time_after_insertion-time_before_insertion)
-
-        print_table(time_for_insertions)
-        print_graph(time_for_insertions)
+          # Print time taken for each insertion
+          print_table(time_for_insertions)
+          print_graph(time_for_insertions)
 
     else:
         exit(0)
