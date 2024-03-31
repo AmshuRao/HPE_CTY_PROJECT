@@ -102,6 +102,18 @@ while(1):
           # Print time taken for each insertion
           print_table(time_for_insertions)
           print_graph(time_for_insertions)
-
+    elif choice==3:
+        time_for_updation = []
+        files = ["data_100_tuples.csv", "data_1000_tuples.csv", "data_10000_tuples.csv", "data_100000_tuples.csv"]
+        for filename in files:
+            time_before_updation = datetime.now()
+            with open(filename, 'r') as file:
+                for line in file:
+                    data = line.strip().split(",")
+                    cur.execute(f"UPDATE flow_table SET src_ip=updated WHERE src_ip='{data[0]}' AND dest_ip='{data[1]}' AND src_port={int(data[2])} AND dest_port={int(data[3])} AND ip_type='{data[4]}'")
+            time_after_updation = datetime.now()
+            time_for_updation.append(time_after_updation - time_before_updation)
+        print_table(time_for_updation)
+        print_graph(time_for_updation)
     else:
         exit(0)
