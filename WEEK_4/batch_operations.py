@@ -119,7 +119,7 @@ while True:
         data = read_data_from_file("data_1000000_tuples.csv")
         update_query = "COPY temp_update_table (src_ip, dest_ip, src_port, dest_port, ip_type) FROM STDIN WITH CSV"
         batch_size = 100000
-        num_batches = (len(data) + batch_size - 1) // batch_size
+        num_batches = (len(data) + batch_size - 1) 
         time_for_updation = []
 
         for i in range(num_batches):
