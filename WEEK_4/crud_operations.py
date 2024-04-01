@@ -1,6 +1,7 @@
 import psycopg2
 from datetime import datetime
 import matplotlib.pyplot as plt
+import time
 
 def print_table(time_seconds):
         header = f"| {'Number of tuples':^20} | {'Time (seconds)':^15} |"
@@ -63,22 +64,28 @@ while(1):
 
           # Perform bulk deletion for different file sizes
           files_to_delete = ['data_100_delete.csv', 'data_1000_delete.csv', 'data_10000_delete.csv', 'data_100000_delete.csv']
+          cur.execute("delete from flow_table;")
+          conn.commit()
+          with open('data_1000000_tuples.csv', 'r') as file:
+               cur.copy_expert(f"COPY flow_table FROM STDIN WITH CSV HEADER", file)
+               conn.commit()
 
           for filename in files_to_delete:
                time_before_deletion = datetime.now()
+               #cnt = 0
                with open(filename, 'r') as file:
                     for line in file:
                          data = line.strip().split(",")
-                         cur.execute(f"DELETE FROM flow_table WHERE src_ip='{data[0]}' AND dest_ip='{data[1]}' AND src_port={int(data[2])} AND dest_port={int(data[3])} AND ip_type='{data[4]}'")
-               conn.commit()
+                         cur.execute("select * from flow_table where src_ip=%s and dest_ip=%s and src_port=%s and dest_port=%s and ip_type=%s",(data[0], data[1], int(data[2]), int(data[3]), data[4]))
+                         rows = cur.fetchall()
+                         if(len(rows)>0):
+                              #cnt+=1
+                              cur.execute("delete from flow_table where src_ip=%s and dest_ip=%s and src_port=%s and dest_port=%s and ip_type=%s",(data[0], data[1], int(data[2]), int(data[3]), data[4]))
+                              conn.commit()
+               #print(cnt)
+                         
                time_after_deletion = datetime.now()
                time_for_deletion.append(time_after_deletion - time_before_deletion)
-               # note : here to maintain the structure of the database we are reinserting the tuples back into the database
-               with open(filename, 'r') as file:
-                    cur.copy_expert(f"COPY flow_table FROM STDIN WITH CSV HEADER", file)
-                    conn.commit()
-               
-
           # Print time taken for each deletion
           print_table(time_for_deletion)
           print_graph(time_for_deletion)
