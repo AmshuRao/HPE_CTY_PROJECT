@@ -4,4 +4,3 @@ notification  - https://www.postgresql.org/docs/current/sql-notify.html
 
 license - https://www.postgresql.org/about/licence/
 
-
