@@ -117,7 +117,7 @@ while(1):
             with open(filename, 'r') as file:
                 for line in file:
                     data = line.strip().split(",")
-                    cur.execute("UPDATE flow_table SET src_ip=%s WHERE src_ip=%s AND dest_ip=%s AND src_port=%s AND dest_port=%s AND ip_type=%s",(data[1], data[0], data[1], int(data[2]), int(data[3]), data[4]))
+                    cur.execute("UPDATE flow_table SET src_port=%s WHERE src_ip=%s AND dest_ip=%s AND src_port=%s AND dest_port=%s AND ip_type=%s",(100, data[0], data[1], int(data[2]), int(data[3]), data[4]))
             conn.commit()
             time_after_updation = datetime.now()
             time_for_updation.append(time_after_updation - time_before_updation)

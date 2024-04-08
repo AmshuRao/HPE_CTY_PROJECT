@@ -131,7 +131,7 @@ while True:
             data_csv = "\n".join([",".join(map(str, row)) for row in batch_data])
             cur.copy_expert(sql=update_query, file=io.StringIO(data_csv))
             conn.commit()
-            cur.execute("UPDATE flow_table SET src_ip = temp_update_table.src_ip, dest_ip = temp_update_table.dest_ip, src_port = temp_update_table.src_port, dest_port = temp_update_table.dest_port, ip_type = temp_update_table.ip_type FROM temp_update_table WHERE flow_table.src_ip = temp_update_table.src_ip AND flow_table.dest_ip = temp_update_table.dest_ip AND flow_table.src_port = temp_update_table.src_port AND flow_table.dest_port = temp_update_table.dest_port AND flow_table.ip_type = temp_update_table.ip_type")
+            cur.execute("UPDATE flow_table SET src_port = 100 FROM temp_update_table WHERE flow_table.src_ip = temp_update_table.src_ip AND flow_table.dest_ip = temp_update_table.dest_ip AND flow_table.src_port = temp_update_table.src_port AND flow_table.dest_port = temp_update_table.dest_port AND flow_table.ip_type = temp_update_table.ip_type")
             conn.commit()
             end_time = datetime.now()
             time_for_updation.append(end_time - start_time)
