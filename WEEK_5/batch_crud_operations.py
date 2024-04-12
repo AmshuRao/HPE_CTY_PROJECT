@@ -92,7 +92,7 @@ try:
         if choice == 1:
             # Delete tuples
             cnt+=1
-            cur.execute("DELETE FROM flow_table;")
+            #cur.execute("DELETE FROM flow_table;")
             conn.commit()
             data = read_data_from_file("data_1000000_tuples.csv")
             delete_query = "COPY temp_delete_table (src_ip, dest_ip, src_port, dest_port, ip_type) FROM STDIN WITH CSV"
