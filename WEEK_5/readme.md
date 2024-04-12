@@ -57,7 +57,7 @@ cd ycsb-0.17.0
 ### Results
 
 - **Common graph for insertion, deletion, and updating:**
-![Common Plot](C:\Users\amshu\Desktop\FOLDER\HPE_project\WEEK_5\common_plot.png)
+![Common Plot](common_plot.png)
 
 - **YCSB tool basic load and run operations:**
 1) Load operation: 
