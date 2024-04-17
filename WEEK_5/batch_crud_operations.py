@@ -96,7 +96,8 @@ try:
             conn.commit()
             data = read_data_from_file("data_1000000_tuples.csv")
             delete_query = "COPY temp_delete_table (src_ip, dest_ip, src_port, dest_port, ip_type) FROM STDIN WITH CSV"
-            batch_size = 100000
+            batch_size = int(input("Enter the batch size : "))
+            
             num_batches = (len(data) + batch_size - 1) // batch_size
             time_for_deletion = []
 
@@ -122,7 +123,7 @@ try:
             cnt+=1
             data = read_data_from_file("data_1000000_tuples.csv")
             insert_query = "COPY flow_table (src_ip, dest_ip, src_port, dest_port, ip_type) FROM STDIN WITH CSV"
-            batch_size = 100000
+            batch_size = int(input("Enter the batch size : "))
             num_batches = (len(data) + batch_size - 1) // batch_size
             time_for_insertion = []
 
@@ -146,7 +147,7 @@ try:
             cnt+=1
             data = read_data_from_file("data_1000000_tuples.csv")
             update_query = "COPY temp_update_table (src_ip, dest_ip, src_port, dest_port, ip_type) FROM STDIN WITH CSV"
-            batch_size = 100000
+            batch_size = int(input("Enter the batch size : "))
             num_batches = (len(data) + batch_size - 1) //batch_size
             time_for_updation = []
 
