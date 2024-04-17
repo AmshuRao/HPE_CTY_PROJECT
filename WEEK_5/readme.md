@@ -95,18 +95,29 @@ To run the tool in the respective database :
 
 - **Solution 2:** Go to `postgrenosql-binding/pox.xml` and edit the version of org.postgres to 42.2.24 (latest version). This will solve most of the errors in the database.
 
-### Results
+## Results
 
 - **Common graph for insertion, deletion, and updating:**
-<img src="common_plot.png" width="400">
+  
+  ![Common Plot](common_plot.png)
 
 - **YCSB tool basic load and run operations:**
-1) Load operation: 
-<img src="ycsb_load_operation.png" width="400">
 
-2) Run operation: <img src="ycsb_run_operation.png" width="400">
+  1) Load operation: 
+  
+     ![YCSB Load Operation](ycsb_load_operation.png)
+
+  2) Run operation:
+  
+     ![YCSB Run Operation](ycsb_run_operation.png)
 
 - **For PostgreSQL DB:**
-1) Load operation: <img src="postgres_ycsb_load.png" width="400">
-2) Run operation: <img src="postgres_ycsb_run.png" width="400">
+
+  1) Load operation:
+  
+     ![PostgreSQL YCSB Load](postgres_ycsb_load.png)
+  
+  2) Run operation:
+  
+     ![PostgreSQL YCSB Run](postgres_ycsb_run.png)
 
