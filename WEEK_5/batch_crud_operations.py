@@ -91,13 +91,16 @@ try:
         
         if choice == 1:
             # Delete tuples
+            t=datetime(year=1, month=1, day=1, hour=0, minute=0, second=0)
+            print(t)
             cnt+=1
             #cur.execute("DELETE FROM flow_table;")
             conn.commit()
-            data = read_data_from_file("data_1000000_tuples.csv")
+            data = read_data_from_file("shuffled_data.csv")
             delete_query = "COPY temp_delete_table (src_ip, dest_ip, src_port, dest_port, ip_type) FROM STDIN WITH CSV"
-            batch_size = 100000
-            num_batches = (len(data) + batch_size - 1) // batch_size
+            batch_size = int(input("enter the batch size: "))
+
+            num_batches = int(input("enter the number of batches"))
             time_for_deletion = []
 
             for i in range(num_batches):
@@ -113,17 +116,27 @@ try:
                 conn.commit()
                 end_time = datetime.now()
                 time_for_deletion.append(end_time - start_time)
+            for i in time_for_deletion:
+                t+=i
+            time_difference = t - datetime(year=1, month=1, day=1, hour=0, minute=0, second=0)
 
-            print_table(time_for_deletion)
-            print_graph(time_for_deletion)
+            # Calculate the time required for insertion in seconds as a float
+            time_required_seconds_float = (time_difference / num_batches).total_seconds() * (1000000 / batch_size)
+
+            print("Time required for deleting (in seconds ) :", time_required_seconds_float) 
+
+            
+            # print_table(time_for_deletion)
+            # print_graph(time_for_deletion)
 
         elif choice == 2:
             # Insert tuples
             cnt+=1
             data = read_data_from_file("data_1000000_tuples.csv")
             insert_query = "COPY flow_table (src_ip, dest_ip, src_port, dest_port, ip_type) FROM STDIN WITH CSV"
-            batch_size = 100000
-            num_batches = (len(data) + batch_size - 1) // batch_size
+            batch_size = int(input("enter the batch size : "))
+
+            num_batches = (len(data) + batch_size - 1) //batch_size
             time_for_insertion = []
 
             for i in range(num_batches):
@@ -137,17 +150,25 @@ try:
                 conn.commit()
                 end_time = datetime.now()
                 time_for_insertion.append(end_time - start_time)
+            t = datetime(year=1, month=1, day=1, hour=0, minute=0, second=0)
+            for i in time_for_insertion:
+                t+=i
+            time_difference = t - datetime(year=1, month=1, day=1, hour=0, minute=0, second=0)
 
-            print_table(time_for_insertion)
-            print_graph(time_for_insertion)
+            # Calculate the time required for insertion in seconds as a float
+            time_required_seconds_float = (time_difference.total_seconds())
+
+            print("Time required for insertion (in seconds ) :", time_required_seconds_float) 
 
         elif choice == 3:
             # Update tuples
             cnt+=1
-            data = read_data_from_file("data_1000000_tuples.csv")
+            t=datetime(year=1, month=1, day=1, hour=0, minute=0, second=0)
+            data = read_data_from_file("shuffled_data.csv")
             update_query = "COPY temp_update_table (src_ip, dest_ip, src_port, dest_port, ip_type) FROM STDIN WITH CSV"
-            batch_size = 100000
-            num_batches = (len(data) + batch_size - 1) //batch_size
+            batch_size = int(input("enter the batch size: "))
+
+            num_batches = int(input("enter the number of batches"))
             time_for_updation = []
 
             for i in range(num_batches):
@@ -159,13 +180,23 @@ try:
                 data_csv = "\n".join([",".join(map(str, row)) for row in batch_data])
                 cur.copy_expert(sql=update_query, file=io.StringIO(data_csv))
                 conn.commit()
-                cur.execute("UPDATE flow_table SET src_port = 100 FROM temp_update_table WHERE flow_table.src_ip = temp_update_table.src_ip AND flow_table.dest_ip = temp_update_table.dest_ip AND flow_table.src_port = temp_update_table.src_port AND flow_table.dest_port = temp_update_table.dest_port AND flow_table.ip_type = temp_update_table.ip_type")
+                cur.execute("UPDATE flow_table SET src_port = 0 FROM temp_update_table WHERE flow_table.src_ip = temp_update_table.src_ip AND flow_table.dest_ip = temp_update_table.dest_ip AND flow_table.src_port = temp_update_table.src_port AND flow_table.dest_port = temp_update_table.dest_port AND flow_table.ip_type = temp_update_table.ip_type")
                 conn.commit()
                 end_time = datetime.now()
                 time_for_updation.append(end_time - start_time)
 
-            print_table(time_for_updation)
-            print_graph(time_for_updation)
+            for i in time_for_updation:
+                t+=i
+            time_difference = t - datetime(year=1, month=1, day=1, hour=0, minute=0, second=0)
+
+            # Calculate the time required for insertion in seconds as a float
+            time_required_seconds_float = (time_difference.total_seconds() / num_batches) * (1000000 / batch_size)
+
+            print("Time required for updating (in seconds ) :", time_required_seconds_float) 
+
+            
+            # print_table(time_for_deletion)
+            # print_graph(time_for_deletion)
 
         elif choice == 4:
             # Plot common graph

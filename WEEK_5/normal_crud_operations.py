@@ -120,7 +120,7 @@ def main():
             elif choice == 3:
                 common_graph_count += 1
                 time_for_updation.clear()
-                files = ["data_100_tuples.csv", "data_1000_tuples.csv", "data_10000_tuples.csv", "data_100000_tuples.csv"]
+                files = ["data_100_delete.csv", "data_1000_delete.csv", "data_10000_delete.csv", "data_100000_delete.csv"]
                 for filename in files:
                     time_before_updation = datetime.now()
                     with open(filename, 'r') as file:
