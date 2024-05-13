@@ -1,4 +1,4 @@
-# Updation Results
+# Updation Results (with 10 lakh tuples in database)
 
 | Number of tuples | Python Script Values | YCSB    | Ratio   |
 |------------------|----------------------|---------|---------|
