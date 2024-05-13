@@ -1,6 +1,10 @@
 # Updation Results
 
-| Number of tuples | Python Script Values | YCSB    | Ratio   |
+**Note 1:** Average values (time required to update a single record) are taken for comparison.
+
+**Note 2:** Python script values and YCSB values are in seconds.
+
+| Number of tuples | Python Script Values | YCSB (avg latency)    | Ratio   |
 |------------------|----------------------|---------|---------|
 | 100              | 0.0002430            | 0.21252 | 874.56  |
 | 1000             | 0.0000719            | 0.18856 | 2622.53 |
