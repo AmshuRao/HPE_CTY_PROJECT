@@ -1,4 +1,4 @@
-# Updation Results
+# Updation Results (with 10 lakh tuples in database)
 
 **Note 1:** Average values (time required to update a single record) are taken for comparison.
 
