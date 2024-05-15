@@ -13,9 +13,9 @@ Refer to the configuration file for exact changes made in the database. The chan
 
 ## Performance Metrics
 
-The table below shows performance metrics for different numbers of tuples and shared memory sizes:
+The table below shows performance metrics for different numbers of batch size and shared memory sizes (keeping 10 lakh tuples in the database):
 
-| Number of Tuples | Shared Memory Size | Insert (ms) | Delete (ms) | Update (ms) |
+| Number of Tuples in each batch | Shared Memory Size | Insert (ms) | Delete (ms) | Update (ms) |
 |------------------|--------------------|-------------|-------------|-------------|
 | 100              | 128 MB             | 172.18      | 488.66      | 4589.2      |
 |                  | 8 GB               | 105.52      | 22.88       | 2206.82     |
